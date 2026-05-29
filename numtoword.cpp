@@ -28,8 +28,25 @@ class numtoword
 
 int numtoword::init()
 {
+    int res;
+
+    int test_num;
+
+    
+
+
+
     return 0;
 };
+
+
+int numtoword::basic()
+{
+    return 0;
+
+};
+
+
 
 
 
