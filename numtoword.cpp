@@ -1,4 +1,4 @@
-#define RANGE_MAX 1000
+#define RANGE_MAX 1000000000
 #define RANGE_MIN 1
 
 
@@ -23,9 +23,15 @@ class numtoword
 
     private:
         int buff_number;
+
         void basic(int num);
-        void tens(int num);
-        void tens_bellow(int num);
+        void basic_ones(int num);
+        void basic_tens(int num);
+        void basic_tens_bellow(int num);
+
+        void thousands(int num);
+        void million(int num);
+
 };
 
 
@@ -36,57 +42,38 @@ int numtoword::init()
     int test_num;
     int buff_num;
 
-    if(this->number >= RANGE_MIN && this->number <= RANGE_MAX)
+    if(this->number >= RANGE_MIN && this->number < RANGE_MAX)
     {
         test_num = this->number;
 
         this->numword = "";
 
-        if(test_num >= 100 && test_num < 1000)
+        if(test_num >= 1000000)
         {
-            buff_num = test_num / 100;
-            this->basic(buff_num);
-            this->numword += " Hundred";
-            test_num = test_num - (buff_num * 100);
+            this->million(test_num);
+            test_num = test_num - ( (test_num / 1000000) * 1000000);
 
             if(test_num != 0)
             {
                 this->numword += " ";
             };
+
         };
         
-        if(test_num >= 10 && test_num < 20)
+        
+        if(test_num >= 1000)
         {
-            buff_num = test_num;
-            this->tens_bellow(buff_num);
-            test_num = test_num - buff_num;
+            this->thousands(test_num);
+            test_num = test_num - ( (test_num / 1000) * 1000);
 
             if(test_num != 0)
             {
                 this->numword += " ";
             };
+
         };
 
-        
-        if(test_num >=20 && test_num < 100)
-        {
-            buff_num = test_num / 10;
-            this->tens(buff_num);
-            test_num = test_num - (buff_num * 10);
-
-            if(test_num != 0)
-            {
-                this->numword += " ";
-            };
-        };
-
-        
-
-        if(test_num >= 1 && test_num < 10)
-        {
-            this->basic(test_num);
-        };
-        
+        this->basic(test_num);
 
 
 
@@ -96,14 +83,10 @@ int numtoword::init()
         res=P_ERR_RANGE;
     };
 
-    
-
-
-
     return res;
 };
 
-void numtoword::basic(int num)
+void numtoword::basic_ones(int num)
 {
 
     switch(num)
@@ -143,7 +126,7 @@ void numtoword::basic(int num)
 };
 
 
-void numtoword::tens(int num)
+void numtoword::basic_tens(int num)
 {
     switch(num)
     {
@@ -180,7 +163,7 @@ void numtoword::tens(int num)
 
 };
 
-void numtoword::tens_bellow(int num)
+void numtoword::basic_tens_bellow(int num)
 {
     switch(num)
     {
@@ -222,7 +205,95 @@ void numtoword::tens_bellow(int num)
 };
 
 
+void numtoword::basic(int num)
+{
+    int buff_num;
+    int test_num;
 
+    test_num = num;
+
+    if(test_num >= 100 && test_num < 1000)
+    {
+        buff_num = test_num / 100;
+        this->basic_ones(buff_num);
+        this->numword += " Hundred";
+        test_num = test_num - (buff_num * 100);
+
+        if(test_num != 0)
+        {
+            this->numword += " ";
+        };
+
+    };
+
+    if (test_num >= 10 && test_num < 20)
+    {
+        buff_num = test_num;
+        this->basic_tens_bellow(buff_num);
+        test_num = test_num - buff_num;
+
+        if (test_num != 0)
+        {
+            this->numword += " ";
+        };
+    };
+
+    if (test_num >= 20 && test_num < 100)
+    {
+        buff_num = test_num / 10;
+        this->basic_tens(buff_num);
+        test_num = test_num - (buff_num * 10);
+
+        if (test_num != 0)
+        {
+            this->numword += " ";
+        };
+    };
+
+    if (test_num >= 1 && test_num < 10)
+    {
+        this->basic_ones(test_num);
+    };
+};
+
+
+void numtoword::thousands(int num)
+{
+    int buff_num;
+    int test_num;
+
+    test_num = num;
+
+    buff_num = test_num / 1000;
+
+    if(buff_num != 0)
+    {
+        this->basic(buff_num);
+        this->numword += " Thousand";
+        test_num = test_num - (buff_num * 1000);
+
+    };
+};
+
+
+
+void numtoword::million(int num)
+{
+    int buff_num;
+    int test_num;
+
+    test_num = num;
+
+    buff_num = test_num / 1000000;
+
+    if(buff_num != 0)
+    {
+        this->basic(buff_num);
+        this->numword += " Million";
+        test_num = test_num - (buff_num * 1000000);
+
+    };
+};
 
 
 
@@ -259,15 +330,27 @@ int main (int argc, char* argv[])
         if(count == 0)
         {
 
+            if(input.length() < 10)
+            {
+                numtoword word_num;
+
+                word_num.number = stoi(input);
+
+                if ((res = word_num.init()) == P_OK)
+                {
+                    cout << word_num.numword << endl;
+                };
+
+            }else
+            {
+                res = P_ERR_RANGE;
+            }
+
             numtoword word_num;
 
             word_num.number = stoi(input);
 
-            if( (res=word_num.init() ) == P_OK)
-            {
-                cout<<word_num.numword<<endl;
-
-            };
+            
 
 
 
