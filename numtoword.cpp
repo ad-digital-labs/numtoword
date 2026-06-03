@@ -1,4 +1,4 @@
-#define RANGE_MAX 100
+#define RANGE_MAX 1000
 #define RANGE_MIN 1
 
 
@@ -26,7 +26,6 @@ class numtoword
         void basic(int num);
         void tens(int num);
         void tens_bellow(int num);
-        void hundreds(int num);
 };
 
 
@@ -43,6 +42,19 @@ int numtoword::init()
 
         this->numword = "";
 
+        if(test_num >= 100 && test_num < 1000)
+        {
+            buff_num = test_num / 100;
+            this->basic(buff_num);
+            this->numword += " Hundred";
+            test_num = test_num - (buff_num * 100);
+
+            if(test_num != 0)
+            {
+                this->numword += " ";
+            };
+        };
+        
         if(test_num >= 10 && test_num < 20)
         {
             buff_num = test_num;
