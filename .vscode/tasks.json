@@ -3,8 +3,9 @@
         {
             "type": "cppbuild",
             "label": "C/C++: g++ build active file",
-            "command": "/usr/bin/g++ -std=c++11",
+            "command": "/usr/bin/g++",
             "args": [
+                "-std=c++11",
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
