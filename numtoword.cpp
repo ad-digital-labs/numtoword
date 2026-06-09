@@ -1,4 +1,4 @@
-#define RANGE_MAX 1000000000
+#define RANGE_MAX 18446744073709551615ULL
 #define RANGE_MIN 1
 
 
@@ -9,6 +9,8 @@
 
 #include <iostream>
 #include <cctype>
+#include <climits>
+#include <string>
 
 using namespace std;
 
@@ -18,19 +20,23 @@ class numtoword
     public:
 
         string numword;
-        int number;
+        unsigned long long int number;
         int init();
 
     private:
-        int buff_number;
+        unsigned long long int buff_number;
 
-        void basic(int num);
-        void basic_ones(int num);
-        void basic_tens(int num);
-        void basic_tens_bellow(int num);
+        void basic(unsigned long long int num);
+        void basic_ones(unsigned long long int num);
+        void basic_tens(unsigned long long int num);
+        void basic_tens_bellow(unsigned long long int num);
 
-        void thousands(int num);
-        void million(int num);
+        void thousands();
+        void million();
+        void billion();
+        void trillion();
+        void quadrillion();
+        void quintillion();
 
 };
 
@@ -39,41 +45,29 @@ int numtoword::init()
 {
     int res;
 
-    int test_num;
-    int buff_num;
+    unsigned long long int test_num;
 
-    if(this->number >= RANGE_MIN && this->number < RANGE_MAX)
+    if(this->number >= RANGE_MIN && this->number <= RANGE_MAX)
     {
-        test_num = this->number;
+
+        this->buff_number=this->number;
+
 
         this->numword = "";
 
-        if(test_num >= 1000000)
-        {
-            this->million(test_num);
-            test_num = test_num - ( (test_num / 1000000) * 1000000);
+        this->quintillion();
 
-            if(test_num != 0)
-            {
-                this->numword += " ";
-            };
+        this->quadrillion();
 
-        };
-        
-        
-        if(test_num >= 1000)
-        {
-            this->thousands(test_num);
-            test_num = test_num - ( (test_num / 1000) * 1000);
+        this->trillion();
 
-            if(test_num != 0)
-            {
-                this->numword += " ";
-            };
+        this->billion();
 
-        };
+        this->million();
 
-        this->basic(test_num);
+        this->thousands();
+
+        this->basic(this->buff_number);
 
 
 
@@ -86,7 +80,7 @@ int numtoword::init()
     return res;
 };
 
-void numtoword::basic_ones(int num)
+void numtoword::basic_ones(unsigned long long int num)
 {
 
     switch(num)
@@ -126,7 +120,7 @@ void numtoword::basic_ones(int num)
 };
 
 
-void numtoword::basic_tens(int num)
+void numtoword::basic_tens(unsigned long long int num)
 {
     switch(num)
     {
@@ -163,7 +157,7 @@ void numtoword::basic_tens(int num)
 
 };
 
-void numtoword::basic_tens_bellow(int num)
+void numtoword::basic_tens_bellow(unsigned long long int num)
 {
     switch(num)
     {
@@ -205,10 +199,10 @@ void numtoword::basic_tens_bellow(int num)
 };
 
 
-void numtoword::basic(int num)
+void numtoword::basic(unsigned long long int num)
 {
-    int buff_num;
-    int test_num;
+    unsigned long long int buff_num;
+    unsigned long long int test_num;
 
     test_num = num;
 
@@ -257,43 +251,203 @@ void numtoword::basic(int num)
 };
 
 
-void numtoword::thousands(int num)
+void numtoword::thousands()
 {
-    int buff_num;
-    int test_num;
+    unsigned long long int buff_num;
+    unsigned long long int test_num;
 
-    test_num = num;
+    test_num = this->buff_number;
 
-    buff_num = test_num / 1000;
+    
 
-    if(buff_num != 0)
+    if(test_num >= 1000)
     {
+
+        buff_num = test_num / 1000;
+
+
         this->basic(buff_num);
         this->numword += " Thousand";
         test_num = test_num - (buff_num * 1000);
 
+        this->buff_number=test_num;
+
+        if(test_num != 0)
+        {
+            this->numword += " ";
+        };        
+
     };
 };
 
 
 
-void numtoword::million(int num)
+void numtoword::million()
 {
-    int buff_num;
-    int test_num;
+    unsigned long long int buff_num;
+    unsigned long long int test_num;
 
-    test_num = num;
+    test_num = this->buff_number;
 
-    buff_num = test_num / 1000000;
+    
 
-    if(buff_num != 0)
+    if(test_num >= 1000000)
     {
+
+        buff_num = test_num / 1000000;
+
+
         this->basic(buff_num);
         this->numword += " Million";
         test_num = test_num - (buff_num * 1000000);
 
+        this->buff_number=test_num;
+
+        if(test_num != 0)
+        {
+            this->numword += " ";
+        };        
+
     };
 };
+
+
+
+
+
+void numtoword::billion()
+{
+    unsigned long long int buff_num;
+    unsigned long long int test_num;
+
+    test_num = this->buff_number;
+
+    
+
+    if(test_num >= 1000000000)
+    {
+
+        buff_num = test_num / 1000000000;
+
+
+        this->basic(buff_num);
+        this->numword += " Billion";
+        test_num = test_num - (buff_num * 1000000000);
+
+        this->buff_number=test_num;
+
+        if(test_num != 0)
+        {
+            this->numword += " ";
+        };        
+
+    };
+
+};
+
+
+
+void numtoword::trillion()
+{
+    unsigned long long int buff_num;
+    unsigned long long int test_num;
+
+    test_num = this->buff_number;
+
+    
+
+    if(test_num >= 1000000000000)
+    {
+
+        buff_num = test_num / 1000000000000;
+
+
+        this->basic(buff_num);
+        this->numword += " Trillion";
+        test_num = test_num - (buff_num * 1000000000000);
+
+        this->buff_number=test_num;
+
+        if(test_num != 0)
+        {
+            this->numword += " ";
+        };        
+
+    };
+
+};
+
+
+
+void numtoword::quadrillion()
+{
+    unsigned long long int buff_num;
+    unsigned long long int test_num;
+
+    test_num = this->buff_number;
+
+    
+
+    if(test_num >= 1000000000000000)
+    {
+
+        buff_num = test_num / 1000000000000000;
+
+
+        this->basic(buff_num);
+        this->numword += " Quadrillion";
+        test_num = test_num - (buff_num * 1000000000000000);
+
+        this->buff_number=test_num;
+
+        if(test_num != 0)
+        {
+            this->numword += " ";
+        };        
+
+    };
+
+};
+
+
+void numtoword::quintillion()
+{
+    unsigned long long int buff_num;
+    unsigned long long int test_num;
+
+    test_num = this->buff_number;
+
+    
+
+    if(test_num >= 1000000000000000000)
+    {
+
+        buff_num = test_num / 1000000000000000000;
+
+
+        this->basic(buff_num);
+        this->numword += " Quintillion";
+        test_num = test_num - (buff_num * 1000000000000000000);
+
+        this->buff_number=test_num;
+
+        if(test_num != 0)
+        {
+            this->numword += " ";
+        };        
+
+    };
+
+};
+
+
+
+
+
+
+
+
+
 
 
 
@@ -302,7 +456,7 @@ int main (int argc, char* argv[])
 {
     int res;
 
-    int number;
+    unsigned long long int number;
     int count;
 
     string input;
@@ -330,26 +484,23 @@ int main (int argc, char* argv[])
         if(count == 0)
         {
 
-            if(input.length() < 10)
+            numtoword word_num;
+            
+
+            try
             {
-                numtoword word_num;
-
-                word_num.number = stoi(input);
-
-                if ((res = word_num.init()) == P_OK)
+                word_num.number = stoull(input);
+                if( (res=word_num.init() ) == P_OK )
                 {
                     cout << word_num.numword << endl;
                 };
 
-            }else
-            {
-                res = P_ERR_RANGE;
             }
-
-            numtoword word_num;
-
-            word_num.number = stoi(input);
-
+            catch(const std::exception& e)
+            {
+                res=P_ERR_RANGE;
+            };
+            
             
 
 
